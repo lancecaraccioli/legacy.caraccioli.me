@@ -1,0 +1,28 @@
+###
+# EXAMPLE GO LIVE SCRIPT - "deploy.sh" in HOME DIRECTORY OF SITE -- ex. /usr/home/sbsmigration.com
+###
+
+
+# Host SSH settings.
+HOST=servdc.tierra.net
+PORT=8622
+
+# Authentication credentials.
+USERNAME=user2185
+PASSWORD=kfx2009!
+
+STATUS=`sshpass -p $PASSWORD ssh $USERNAME@$HOST -p $PORT "svn status ./htdocs"`
+
+if [ "$STATUS" = "" ]; then
+    sshpass -p $PASSWORD ssh $USERNAME@$HOST -p $PORT "svn update ./htdocs"
+    sshpass -p $PASSWORD ssh $USERNAME@$HOST -p $PORT "cd htdocs/library
+		ln -s /usr/local/kfx/ZendFramework-1.8.4-Custom/Custom Custom
+		ln -s /usr/local/kfx/ZendFramework-1.8.4/library/Zend Zend
+		ln -s /usr/local/kfx/Doctrine-1.1.2/lib/Doctrine Doctrine
+		ln -s /usr/local/kfx/Doctrine-1.1.2/lib/Doctrine.php Doctrine.php
+		ln -s /usr/local/kfx/wideImage/lib WideImage
+		ln -s /usr/local/kfx/PEAR-1.7.2 PEAR
+else
+    echo -e "\033[33;40mSite already exists. ssh -p $PORT $USERNAME@$HOST (pa$
+fi
+

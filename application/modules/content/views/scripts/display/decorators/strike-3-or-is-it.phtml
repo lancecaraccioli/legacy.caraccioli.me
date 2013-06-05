@@ -1,0 +1,83 @@
+<style type="text/css">
+	ol.predicates li,
+	ol.predicates{
+		list-style-type:upper-alpha;
+	}
+	table.truth-table{
+		float:left;
+		margin:5px;
+	}
+	table.truth-table tr.odd{
+		background-color:#C9A983;
+	}
+</style>
+
+<h3>What is a strike?</h3>
+<p>
+	I pitched in the minors for 7 years.  So I consider myself an "expert" in the knowledge of what is and isn't a "strike".  
+	However recently I challenged myself to a thought experiment.  "What is the logically minimal definition of a strike?"  
+	That question made it obvious to me that knowing what a strike is and communicating that knowledge
+	to someone else who has never heard of baseball are two different things.  I, like most humans, tend to generalize concepts.
+	And before this experiment I would have been happy to tell a naive fan that anytime the batter swings and misses it's a strike.
+	Of course that description doesn't adequately describe a strike, rather is a over generalization of the concept.
+	In many cases this is a good thing to do as it allows people to communicate broad strokes of understanding without
+	delving into nuanced details until those situations arise.  Unfortunately in software design, modeling the real world means
+	modeling specifics which means you need an expert that knows the complex business rules, but can also explain complex
+	rules comprehensively.  Ultimately the intent of my thought experiment was to
+	derive a simple methodology for asking experts the right questions to reveal their comprehensive understanding as
+	a logical function.  Enter Karnaugh maps. 
+</p>
+<p>
+	It occurred to me that my best approach for explaining a strike to someone else would be to build the logical circuit that
+	could map the know inputs to the know output.  I defined my predicates as follows.
+</p>
+<ol class="predicates">
+	<li>Called Strike</li>
+	<li>Swing & Miss</li>
+	<li>Foul Ball</li>
+	<li>2 Strikes (Prior To The Pitch)</li>
+	<li>Pitch Caught By Catcher</li>
+</ol>
+<h4>Strike Truth Table</h4>
+<?$data = Content_Model_StrikeTruthTable::getData();?>
+<table class="truth-table">
+	<tr>
+		<th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>Strike?</th>
+	</tr>
+	<?foreach ($data as $row):?>
+	<tr class="<?=$this->cycle(array('odd','even'),'rows')->next();?>">
+		<?foreach ($row as $datum):?>
+			<td class="<?=$this->cycle(array('odd','even'),'columns')->next();?>">
+				<?=$datum;?>
+			</td>
+		<?endforeach;?>
+	</tr>
+	<?endforeach;?>
+</table>
+<p>
+	Using the predicates that my expert (me) told me determined wether or not a pitch was a strike 
+	I was able to construct the truth table to the left.
+</p>
+<p>
+	I used a cool Karnaugh Map generation tool called <a href="http://www.inf.ufrgs.br/nangate/docman/karma/index.html">Karma</a> to build the following Karnaugh Map, 
+	it also derived the logical function based on it, and then refactored the logical function into the final logically minimal
+	definition of a strike.
+</p>
+<img src = "/user/content/strike-karnaugh-map.gif" alt="karnaugh map"/>
+<img src = "/user/content/strike-truth-funtion.gif" alt="C * (!D+E)+B+A"/>
+<p>
+	Translating this logical function back to it's English description shows the magic of Karnaugh Maps.  
+	If the umpire calls a strike, or the batter swings and misses, or if the batter fouls the ball off and there was less than
+	two strikes or the catcher caught the ball, then it was a strike.
+</p>
+<p>
+	Success.  We now have a way to explain what a strike is to anyone.  Not so fast!  We still have to get feedback from the expert.
+	In this situation as in many real world examples the expert noticed a flaw in the logic.  We did everything correctly, however
+	the expert forgot to tell us one somewhat rare condition that could also lead to a strike.  If a hitter were to bunt a ball 
+	foul with two strike, this also would result in a strike.  But this is OK.  Once we derived the logical function and the expert
+	was able to evaluate it, he was able to say that all we needed to do was add one additional term to the group of predicates
+	in parenthesis.  F="attempted bunt".  Our final truth function then is "C*(!D+E+F)+B+A".  With this simple yet robust solution
+	we can now be confident that our business logic is sound.  Thanks Karnaugh.
+</p>
+<p></p>
+<br style="clear:both;" />

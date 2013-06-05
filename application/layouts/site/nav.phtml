@@ -1,0 +1,13 @@
+<?=$this->headScript()->captureStart();?>
+(function($){
+	$(document).ready(function(){
+		$('ul.navigation li').hover(
+			function(){$(this).addClass('hover').children('ul').addClass('hover')},
+			function(){$(this).removeClass('hover').children('ul').removeClass('hover')}
+		);
+	});
+})(jQuery);
+<?$this->headScript()->captureEnd();?>
+<?=$this->navigation()->menu()->renderMenu(null,array('ulClass'=>'navigation dropdown','minDepth'=>1));?>
+
+

@@ -1,0 +1,26 @@
+<?
+$entries = array();
+foreach ($this->contentPages as $key=>$contentPage){
+	$entries[$key] = array(
+		'title'=>$contentPage->title,
+		'link'=>'http://'.$_SERVER['SERVER_NAME'].'/content/display/show/slug/'.$contentPage->slug,
+		'description'=>substr(strip_tags(preg_replace('/<style([^>]*)>([^<]*?)<\/style([^>]*)>/', '', preg_replace('/<script([^>]*)>([^<]*?)<\/script([^>]*)>/', '', $contentPage->content))), 0,200).'...',
+		'guid'=>$contentPage->id,
+		'lastUpdate'=>strtotime($contentPage->publish_date),
+	);
+
+}
+	
+$feedArray = array(
+	'title'=>"Mr Burly's Sandbox",
+	'link'=>'http://'.$_SERVER['SERVER_NAME'].'/content/feed',
+	'charset'=>'utf-8',
+	'entries'=>$entries,
+	'lastUpdate'=>$this->contentPages[0]->publish_date,
+	'author'=>'Lance Caraccioli',
+);
+
+$rssFeed = Zend_Feed::importArray($feedArray, 'rss');
+$rssFeed->send();
+?>
+

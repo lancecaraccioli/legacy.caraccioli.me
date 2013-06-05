@@ -1,0 +1,49 @@
+/*global*/
+a{color:#B39444;text-decoration:none;-moz-outline:0px;}
+html{background-color:#5F6262;}
+body{background-color:transparent;color:#979994;font-family:sans-serif;text-align:left;padding:1px;}
+.main-wrap {margin:12px auto;width:90%;border-width:4px;border-style:solid;min-width:410px;}
+.hidden{display:none;}
+
+/*header*/
+.header{
+    border-color:#000;
+    border-style:solid;
+    border-width:0px 0px 2px;
+    height:110px;
+    background-color:#000;
+    position:relative;
+    overflow:hidden;
+}
+
+/*navigation*/
+.navigation-wrap{position:relative;z-index:2;overflow:hidden;margin:-2px 0;padding:0px 5px 0px 5px;background-color:transparent;}
+.navigation-wrap .navigation{margin:0px;padding:0px 7px;overflow:hidden;}
+* html .navigation-wrap .navigation{overflow:visible;height:1px;position:relative}/*standard wrap floats hack for ie*/
+.navigation-wrap .navigation a{font-weight:bold;display:block;margin:0px;border-width:2px;border-style:solid;border-collapse:collapse;}
+.navigation-wrap .navigation a{background-color:#000;color:#B39444;padding:4px 12px;border-color:#000 transparent #B39F6C;}
+.navigation-wrap .navigation a.current,
+.navigation-wrap .navigation a:hover{background-color: #420A0A;border-color:#B39F6C;color:#979994;}
+.navigation-wrap .navigation a.current{border-bottom-color:#420A0A;padding-left:19px;padding-right:19px;margin-left:-7px;margin-right:-7px;}
+.navigation-wrap .navigation li{float:left;z-index:1;list-style:none;position:relative;}
+.navigation-wrap .navigation li.current{z-index:3;}
+
+/*content*/
+.content-wrap{background-color:#000;overflow:hidden;border-top:2px solid #B39F6C;}
+.content-wrap .right-column{width:100%;float:left;min-height:200px;}
+.content-document{padding:1%;min-height:175px;background-color:#420A0A;}
+
+/*footer*/
+.footer{overflow:hidden;position:relative;border-top:1px solid #999;background-color:#333;}
+* html .footer {overflow:visible;height:1px;}
+.footer .info{position:absolute;right:12px;top:12px;float:right;}
+.footer .info a{color:#FFF;}
+.footer .logo{float:left;margin:5px;height:32px;}
+
+/**one column layout**/
+
+/**two column layout**/
+.two-column{overflow:hidden;}
+* html .two-column{overflow:visible;position:relative;height:1px;}/*ie6*/
+.two-column .left-column{width:12%;float:left;}
+.two-column .right-column{width:87%;float:left;background-color:#333333;border:2px solid #000;}

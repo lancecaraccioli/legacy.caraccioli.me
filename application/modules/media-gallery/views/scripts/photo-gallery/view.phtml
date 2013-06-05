@@ -1,0 +1,67 @@
+<? $this->headLink()->appendStylesheet('/library/css/jquery.lightbox-0.4.css');?>
+<? $this->headLink()->appendStylesheet('/library/css/photo-gallery.css');?>
+<? $this->headScript()->appendFile('/library/js/jquery.lightbox-0.4.min.js');?>
+<? $this->headScript()->captureStart();?>
+	function setupAlbum(album){
+		album.find('a.photoLink').lightBox();
+		album.find('p.paginationControl a').click(function(){
+			album
+				.html('<img class="ajax-loader" src="/images/ajax-loader.gif"/>')
+				.load($(this).attr('href')+'?format=xml', function(){setupAlbum(album)});
+			var URI = document.URL.split('#');
+			window.location = URI[0] + '#' + $(this).attr('href');
+			return false;
+		});
+	}
+	$(document).ready(function(){
+		var URI = document.URL.split('#');
+		$('ul.albumNav a.tab').click(function(){
+			$('ul.albumNav li.currentTab').removeClass('currentTab');
+			$(this).parent().addClass('currentTab');
+			$('div.currentAlbum').removeClass('currentAlbum');
+			var album = $('div'+$(this).attr('rel'));
+			album
+				.addClass('currentAlbum')
+				.html('<img class="ajax-loader" src="/images/ajax-loader.gif"/>')
+				.load($(this).attr('href')+'?format=xml', function(){setupAlbum(album)});
+			var URI = document.URL.split('#');
+			window.location = URI[0] + '#' + $(this).attr('href');
+			return false;
+		});
+		if (URI.length > 1 && $('a[href='+URI[1]+']').size() > 0){
+			$('a[href='+URI[1]+']').trigger('click');
+		}
+	});
+<? $this->headScript()->captureEnd();?>
+<? $this->placeholder('title')->set('Photo Gallery');?>
+
+<div id="albums-wrapper">
+	
+	<?if ($this->albums):?>
+	    <?$this->placeholder('left-column-content')->captureStart();?>
+		    <ul class="albumNav">
+			    <? foreach ($this->albums as $album):?>
+				    <li class="album-<?=$album->id;?><?if ($album->id == $this->state->currentAlbum):?> currentTab<?endif;?>"><a class="tab" href="<?=$this->url(array('module'=>'media-gallery','controller'=>'photo-gallery', 'action'=>'view', 'album'=>$album->id));?>" rel="#photo-list-<?=$album->id;?>"><span><?=$album->name;?></span></a></li>
+			    <?endforeach;?>
+		    </ul>
+		<?$this->placeholder('left-column-content')->captureEnd();?>
+		<div id="loading-image-pane"><img class="ajax-loader" src="/layout/img/ajax-loader-wide-yellow.gif"/></div>
+		<div id="large-image-view-pane"></div>
+		<? foreach ($this->albums as $album):?>
+			<div id="photo-list-<?=$album->id;?>" class="<?if ($album->id == $this->state->currentAlbum):?>currentAlbum <?endif?>photo-list">
+				<?if ($album->id == $this->state->currentAlbum):?>
+					<?=$this->partial('photo-gallery/partial/album-list.phtml', array('album'=>$album, 'paginator'=>$this->paginator));?>
+					<? $this->headScript()->captureStart();?>
+						$(document).ready(function(){
+							setupAlbum($("#photo-list-<?=$album->id;?>"));
+						});
+					<? $this->headScript()->captureEnd();?>
+				<?endif;?>
+			</div>
+		<?endforeach;?>
+	<? else: ?>
+		<p>No photo albums found.</p>
+	<? endif; ?>
+</div>
+
+

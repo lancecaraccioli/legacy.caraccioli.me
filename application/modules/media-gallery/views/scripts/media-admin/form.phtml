@@ -1,0 +1,109 @@
+<? $this->headLink()->appendStylesheet('/modules/media-gallery/css/uploadify.css');?>
+<? $this->headScript()->appendFile('/modules/media-gallery/js/jquery.uploadify.js');?>
+<? $this->headLink()->appendStylesheet('/library/js/Jcrop/css/jquery.Jcrop.css');?>
+<? $this->headScript()->appendFile('/library/js/Jcrop/js/jquery.Jcrop.min.js');?>
+
+<? if ($this->media->id):?>
+	<? $this->headScript()->captureStart();?>
+		sessionID='<?=session_id();?>';
+		mediaID='<?=$this->media->id?>';
+		$(document).ready(function(){
+			$("#fileUploader").fileUpload({
+				'uploader': '/modules/media-gallery/swf/uploader.swf',
+				'cancelImg': '/modules/media-gallery/images/buttons/cancel.png',
+				'buttonImg': '/modules/media-gallery/images/buttons/browse.gif',
+				'script': "<?=$this->url(array('action'=>'upload','controller'=>'media-upload','format'=>'json'));?>",
+				'scriptData': {'s_ID':sessionID, 'media_id':mediaID},
+				'displayData': 'speed',
+				'wmode':'transparent',
+				'width':'75',
+				'onError':errorHandler,
+				'onComplete':completeHandler,
+				'onSelectOnce':selectHandler,
+				'fileExt':'*.jpg;*.gif;*.png;*.pdf;*.flv;*.wmv;*.mp3;*.doc'
+			});
+		});
+		
+		function selectHandler(event,data){
+			$('#uploadMediaButton').unbind('click');
+			$('#uploadMediaButton').click(function(){
+				$(event.target).fileUploadStart();
+			});
+		}
+		function errorHandler(event, queueID, fileObj, errorObj){
+		    //console.debug(arguments);
+		}
+		function completeHandler(event,queueID, fileObj, response, data){
+		    //the response should contain the temporary filename
+			//console.debug(arguments);
+		    try{
+        	    responseData = eval('('+response+')');
+				console.debug(responseData);
+				$('img.thumbnail').attr('src', responseData.thumbnailUrl);
+				$('input#uploaded_filename').val(responseData.fileName);
+			} catch(e){
+        	    displayMessage("This error occured because the reponse from the server was not a valid JSON format.  Please verify what you were trying to do actually worked, by reloading the page.", 'error');
+        	}
+
+		}
+	<? $this->headScript()->captureEnd();?>
+	<? $this->headScript()->captureStart();?>
+		function showPreview(coords)
+		{
+			//percentage calculations
+			l = parseInt(coords.x/$('.crop-tool img').width() * 100);//left
+			t = parseInt(coords.y/$('.crop-tool img').height() * 100);//top
+			w = parseInt(coords.w/$('.crop-tool img').width() * 100);//left
+			h = parseInt(coords.h/$('.crop-tool img').height() * 100);//top
+			//fixed height
+			mh = 100;//thumbnail max height
+			mw = 100;//thumbnail max width
+			$("input[name='crop_top']").val(t);
+			$("input[name='crop_left']").val(l);
+			$("input[name='crop_width']").val(w);
+			$("input[name='crop_height']").val(h);
+			$('img.thumbnail').attr('src','/media-gallery/media-download/thumbnail/file/<?=$this->media->getSlug();?>_t_'+l+'_'+t+'_'+w+'_'+h+'_'+mw+'_'+mh+'.<?=$this->media->getExtension();?>');
+		};
+		(function($){
+			$(document).ready(function(){
+				$('.crop-tool img').Jcrop({
+					//onChange: showPreview,
+					onSelect: showPreview,
+					aspectRatio: 1
+				});
+			});
+		})(jQuery);
+	<? $this->headScript()->captureEnd();?>
+
+<?endif;?>
+<h2><?= $this->media->Album->name ?> - Media Input Form</h2>
+<p><a href="/media-gallery/media-admin/list/media_album_id/<?=$this->media->Album->id ?>">Return to List</a></p>
+<fieldset class="form-container">
+	<legend>Current Media</legend>
+    <?$mediaExists = ($this->media->id && $this->media->uploaded_filename);?>
+	<ul class="current-media<?if (!$mediaExists):?> hidden<?endif;?>">
+		<li><label class="optional" >Thumbnail:</label><div class="thumbnail"><img class="thumbnail" src="<?=$this->media->croppedThumbnailUrl(100,100);?>"/></div></li>
+		<li><label class="optional" >Crop Tool:</label><span class="crop-tool"><img class="" src="<?=$this->media->thumbnailUrl(640,480);?>"/></span></li>
+		<li><label class="optional" >Media File:</label>&nbsp;&nbsp;(original name)&nbsp;<a target="_blank" class="media-link" href="<?=$this->media->mediaUrl();?>"><?=$this->media->uploaded_filename;?></a></li>
+	</ul>
+	<div class="creation-instructions<?if ($mediaExists):?> hidden<?endif;?>">
+		<strong>Creating a new media record is a two step process.</strong><br />
+		<ol>
+			<li style="list-style-type:decimal;<?if (!$this->media->id) echo "color:#E86C31;";?>">Please add the required information below and save your record.  You will be returned to the form and a media uploader will be made available for you to upload your associated media files.</li>
+			<li style="list-style-type:decimal;<?if (!$this->media->uploaded_filename) echo "color:#E86C31;";?>">Select the files you would like to upload and then click the save button.</li>
+		</ol>
+	</div>
+</fieldset>
+<fieldset class="form-container">
+	<legend>Media File Uploader</legend>
+	<?if($this->media->id):?>
+		<div id="fileUploader"></div>
+		<button id="uploadMediaButton">Upload This File</button>
+	<?else:?>
+		<p>Once your media record is created you may return here to upload a media file.</p>
+	<?endif;?>
+</fieldset>
+<fieldset class="form-container">
+	<legend>Media Information</legend>
+	<?=$this->form; ?>
+</fieldset>

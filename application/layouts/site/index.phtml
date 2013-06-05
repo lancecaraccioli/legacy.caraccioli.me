@@ -1,0 +1,9 @@
+<?$this->placeholder('title')->set('Homepage Title');?>
+<?$this->placeholder('layout-content')->captureStart();?>
+   <div id="home">
+   		<div class="novis">
+   			<?= $this->layout()->content; ?>	
+   		</div>
+   </div>
+<?$this->placeholder('layout-content')->captureEnd();?>
+<?=$this->render('layout.phtml');?>

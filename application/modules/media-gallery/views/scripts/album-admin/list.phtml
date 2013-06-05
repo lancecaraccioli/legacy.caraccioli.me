@@ -1,0 +1,23 @@
+<h2>Media Albums</h2>
+<a href="<?=$this->url(array('module'=>'media-gallery','controller'=>'album-admin','action'=>'create'),'default',true);?>">Add Another Media Album</a><br />
+<br />
+<table align="center">
+	<tr>
+		<th>Cover Image</th>
+		<th>Name</th>
+		<th>Description</th>
+		<th>Submission Date</th>
+		<th colspan="3">Actions</th>
+	</tr>
+	<? foreach ($this->media_albums as $media_album):?>
+		<tr class="<?=$this->cycle(array('light','dark'));?>">
+			<td><img src="<?=($media_album->CoverPhoto->thumbnailUrl(100,100)); ?>"/></td>
+			<td><?=($media_album->name); ?></td>
+			<td><?=($media_album->description); ?></td>
+			<td><?=(date('r',strtotime($media_album->created_at))); ?></td>
+			<td><a href="<?=$this->url(array('module'=>'media-gallery','controller'=>'album-admin','action'=>'edit', 'id'=>$media_album->id), 'default', true);?>">Edit</a></td>
+			<td><a href="<?=$this->url(array('module'=>'media-gallery','controller'=>'album-admin','action'=>'delete', 'id'=>$media_album->id), 'default', true);?>">Delete</a></td>
+			<td><a href="<?=$this->url(array('module'=>'media-gallery','controller'=>'media-admin','action'=>'list', 'media_album_id'=>$media_album->id), 'default', true);?>">Manage Media</a></td>
+		</tr>
+	<?endforeach;?>
+</table>

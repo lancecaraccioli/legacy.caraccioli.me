@@ -1,0 +1,29 @@
+<h2><? echo $this->media_album->name ?> - Media</h2>
+<a href="/media-gallery/album-admin/list">Back to Media Albums</a> | <a href="/media-gallery/media-admin/create/media_album_id/<? echo $this->media_album->id ?>">Add Another Media</a> | <a href="/media-gallery/album-admin/edit/id/<?=($this->media_album->id); ?>">Edit Album (<?=$this->media_album->name?>)</a><br />
+<br />
+<fieldset>
+    <legend>Media Listing</legend>
+    <table align="center">
+    	<tr>
+    		<th>Thumbnail</th>
+    		<th>Name</th>
+    		<th>Type</th>
+    		<th>Last Updated</th>
+    		<th>(options)</th>
+    	</tr>
+    	<? if ($this->media_album->Media->count()):?>
+			<?foreach ($this->media_album->Media as $media):?>
+			<tr class="<?$this->cycle(array('dark','light'));?>">
+				<td><img src="<? echo($media->thumbnailUrl(32,32)); ?>"/></td>
+				<td><? echo($media->name); ?></td>
+				<td><? echo($media->type); ?></td>
+				<td><? echo(date('r',strtotime($media->updated_at))); ?></td>
+				<td>
+					<a href="/media-gallery/media-admin/edit/id/<? echo($media->id); ?>">Edit</a> | 
+					<a href="/media-gallery/media-admin/delete/id/<? echo($media->id); ?>">Delete</a>
+				</td>
+			</tr>
+			<? endforeach;?>
+        <?endif;?>
+    </table>
+</fieldset>

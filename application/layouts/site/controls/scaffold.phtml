@@ -1,0 +1,43 @@
+<table>
+	<tr>
+		<?foreach($this->relations as $relation):?>
+			<th class="$relation['alias']"><?=$relation['alias'];?></th>
+		<?endforeach;?>
+		<?foreach($this->columns as $field):?>
+			<?if (!in_array($field, $this->ignoreColumns)):?>
+				<th class="<?=$field;?>"><a class="sort-asc-button" href="<?=$this->url(array('orderby[]'=>"$field.ASC"));?>">&uarr;</a><?=$field;?><a class="sort-desc-button" href="<?=$this->url(array('orderby[]'=>"$field.DESC"));?>">&darr;</a></th>
+			<?endif;?>
+		<?endforeach;?>
+		<th>(actions)</th>
+	</tr>
+	<?foreach($this->records as $record):?>
+		<tr class="<?=$this->cycle(array('odd','even'), 'row')->next();?>">
+			<?$this->cycle(array('odd','even'), 'column')->rewind();?>
+			<?foreach($this->relations as $relation):?>
+				<td class="<?=$this->cycle(array('odd','even'), 'column')->next();?>">
+					<ul>
+					<?if ($relation['type']=='many'):?>
+						<?foreach($record->$relation['alias'] as $relatedRecord):?>
+							<li><?=$relatedRecord->$relation['humanIdentifier'];?></li>
+						<?endforeach;?>
+					<?else:?>
+						<li><?=$record->$relation['alias']->$relation['humanIdentifier'];?></li>
+					<?endif;?>
+					</ul>
+				</td>
+			<?endforeach;?>
+			<?foreach($this->columns as $field):?>
+				<?if (!in_array($field, $this->ignoreColumns)):?>
+					<td class="<?=$this->cycle(array('odd','even'), 'column')->next();?>"><?=$record->$field;?></td>
+				<?endif;?>
+			<?endforeach;?>
+			<td>
+				<?$first = true;?>
+				<?foreach($this->actions as $action=>$label):?>
+					<?if (!$first):?> | <?endif;?><a class="<?=$action?>" href="<?=$this->url(array('action'=>$action, 'id'=>$record->id));?>"><?=$label?></a>
+					<?$first = false;?>
+				<?endforeach;?>
+			</td>
+		</tr>
+	<?endforeach;?>
+</table>

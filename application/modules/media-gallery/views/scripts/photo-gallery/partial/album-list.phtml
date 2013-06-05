@@ -1,0 +1,8 @@
+<ul class="album-<?=$this->album->id;?> album-ul">
+<? foreach ($this->paginator as $photo):?>
+	<li class="album-li">
+		<a id="photo-<?=$photo->id?>" class="photoLink" href="<?=$photo->thumbnailUrl(640,480);?>" rel="lightbox-album-<?=$this->album->id;?>"><img title="<?=$photo->name;?>" class="photo" src="<?=$photo->croppedThumbnailUrl(100,100);?>" /></a>
+	</li>
+<?endforeach;?>
+</ul>
+<?= $this->paginationControl($this->paginator, 'Sliding', '_partial/paginationPartial.phtml'); ?>

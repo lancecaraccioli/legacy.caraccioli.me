@@ -1,0 +1,18 @@
+ul.navigation{list-style:none;padding:0;margin:0;}
+ul.navigation.dropdown li{list-style:none;float:left;position:relative;}
+ul.navigation.dropdown li li{float:none;}
+ul.navigation.dropdown ul{position:absolute;top:32px;left:-9999em;margin:0;padding:0;}
+ul.navigation.dropdown ul.hover{left:0px;}
+ul.navigation.dropdown ul ul{top:0px;left:-9999em;}
+ul.navigation.dropdown ul ul.hover{left:190px;}
+ul.navigation li a {display:inline-block;padding:8px 14px;	color:#ffffff;	height:15px;	font-family:"Trebuchet MS", Verdana, Arial;	font-weight:normal;	font-size:0.9em;	text-decoration:none;	margin:0 2px;	background-color:#23364E;	border-top:1px solid #4972A2;	border-right:1px solid #131D2A;}
+ul.navigation li li a{display:block;width:160px;height:auto;border:1px solid #AD8657;}
+ul.navigation li.hover>a,
+ul.navigation li.active>a {	background-image:url('/layouts/images/bgselected.jpg');	background-repeat:repeat-x;	background-position:top left;	color:#333333;background-color:#FFF;}
+
+#nav {width:65%;margin:0;position:absolute;bottom:0px;right:10%;}
+#nav ul.navigation {position:relative;}
+#main-sidebar ul.navigation{margin:10px 15px;background-color:#23364E;border:1px solid #3F618C;}
+#main-sidebar ul.navigation li{list-style:none;}
+#main-sidebar ul.navigation li a {	padding:5px 3px;	height:auto;	border-left:10px solid #131D2A;	display:block;}
+#main-sidebar ul.navigation li.active>a{border-left:10px solid #AD8657;}
