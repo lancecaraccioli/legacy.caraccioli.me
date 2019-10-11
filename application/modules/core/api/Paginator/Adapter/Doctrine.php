@@ -8,7 +8,7 @@
 class Core_Api_Paginator_Adapter_Doctrine implements Zend_Paginator_Adapter_Interface
 {
     /**
-     * Csontructor.
+     * Constructor.
      *
      * Creates the adapter from a query.
      *
